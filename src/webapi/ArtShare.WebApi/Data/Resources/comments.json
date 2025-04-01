@@ -1,0 +1,23 @@
+[
+  {
+    "Id": "ab72b2f5-0801-47d1-b3b0-6d8f2f788fcf",
+    "UserId": "63d378b9-2e44-4411-b61b-b7b31bc57a4b",
+    "ArtworkId": "c8d0b145-c4fc-4c30-b4b8-b3f87e8297e6",
+    "Text": "This is the most famous portrait in the world!",
+    "CreatedAt": "2025-03-30T00:00:00"
+  },
+  {
+    "Id": "ff1a1f2a-f6b5-4561-b9f1-d459fbd493fc",
+    "UserId": "e1c8b953-41c5-4a32-94e2-bc1c6a984de4",
+    "ArtworkId": "a8e50447-bba5-428b-bdc5-091b206f70a5",
+    "Text": "I love the use of color in this painting.",
+    "CreatedAt": "2025-03-30T00:00:00"
+  },
+  {
+    "Id": "9c71e8b5-5f34-43a5-891e-fec5dbaf586e",
+    "UserId": "63d378b9-2e44-4411-b61b-b7b31bc57a4b",
+    "ArtworkId": "c1e9c1b7-8d25-4b70-b77a-caff0a7602c1",
+    "Text": "The brushwork here is incredible!",
+    "CreatedAt": "2025-03-30T00:00:00"
+  }
+]

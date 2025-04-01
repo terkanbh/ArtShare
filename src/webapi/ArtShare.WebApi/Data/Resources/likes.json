@@ -1,0 +1,20 @@
+[
+  {
+    "Id": "34a947eb-09c3-468e-bf27-bc06efb76c11",
+    "UserId": "e1c8b953-41c5-4a32-94e2-bc1c6a984de4",
+    "ArtworkId": "c8d0b145-c4fc-4c30-b4b8-b3f87e8297e6",
+    "CreatedAt": "2025-03-25T00:00:00"
+  },
+  {
+    "Id": "e1cccf1c-21f3-44a4-9ecb-64b527540432",
+    "UserId": "0be5a75e-8703-4b93-a2e1-c39ac41be478",
+    "ArtworkId": "332105c0-0135-4ec5-93a6-94c83665f67e",
+    "CreatedAt": "2025-03-25T00:00:00"
+  },
+  {
+    "Id": "9f41e8e4-2640-48e1-b7b9-6506ac5ab2b5",
+    "UserId": "63d378b9-2e44-4411-b61b-b7b31bc57a4b",
+    "ArtworkId": "a8e50447-bba5-428b-bdc5-091b206f70a5",
+    "CreatedAt": "2025-03-25T00:00:00"
+  }
+]

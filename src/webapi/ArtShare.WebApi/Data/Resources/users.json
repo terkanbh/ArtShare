@@ -1,0 +1,42 @@
+[
+  {
+    "Id": "c7a0a476-9e4e-4d7e-bbe1-476d4f010f67",
+    "FirstName": "Admin",
+    "LastName": "Admin",
+    "Email": "admin@admin.com",
+    "ImagePath": "/users/default.webp",
+    "CreatedAt": "2025-03-25T00:00:00"
+  },
+  {
+    "Id": "d2c0a476-2e4e-4d7e-bbe1-476d4c010f65",
+    "FirstName": "Leonardo",
+    "LastName": "da Vinci",
+    "Email": "leonardo@art.com",
+    "ImagePath": "/users/default.webp",
+    "CreatedAt": "2025-03-26T00:00:00"
+  },
+  {
+    "Id": "0be5a75e-8703-4b93-a2e1-c39ac41be478",
+    "FirstName": "Vincent",
+    "LastName": "van Gogh",
+    "Email": "vincent@art.com",
+    "ImagePath": "/users/default.webp",
+    "CreatedAt": "2025-03-27T00:00:00"
+  },
+  {
+    "Id": "63d378b9-2e44-4411-b61b-b7b31bc57a4b",
+    "FirstName": "Pablo",
+    "LastName": "Picasso",
+    "Email": "pablo@art.com",
+    "ImagePath": "/users/default.webp",
+    "CreatedAt": "2025-03-28T00:00:00"
+  },
+  {
+    "Id": "e1c8b953-41c5-4a32-94e2-bc1c6a984de4",
+    "FirstName": "Claude",
+    "LastName": "Monet",
+    "Email": "claude@art.com",
+    "ImagePath": "/users/default.webp",
+    "CreatedAt": "2025-03-29T00:00:00"
+  }
+]

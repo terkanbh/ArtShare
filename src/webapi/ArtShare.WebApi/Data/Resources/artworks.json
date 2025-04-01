@@ -1,0 +1,30 @@
+[
+  {
+    "Id": "c8d0b145-c4fc-4c30-b4b8-b3f87e8297e6",
+    "UserId": "d2c0a476-2e4e-4d7e-bbe1-476d4c010f65",
+    "ImagePath": "/artworks/default.webp",
+    "Description": "Mona Lisa - A portrait of a woman, known for her enigmatic smile.",
+    "CreatedAt": "2025-03-30T00:00:00"
+  },
+  {
+    "Id": "a8e50447-bba5-428b-bdc5-091b206f70a5",
+    "UserId": "d2c0a476-2e4e-4d7e-bbe1-476d4c010f65",
+    "ImagePath": "/artworks/default.webp",
+    "Description": "The Last Supper - Depicts the last meal of Jesus with his disciples.",
+    "CreatedAt": "2025-03-30T00:00:00"
+  },
+  {
+    "Id": "c1e9c1b7-8d25-4b70-b77a-caff0a7602c1",
+    "UserId": "0be5a75e-8703-4b93-a2e1-c39ac41be478",
+    "ImagePath": "/artworks/default.webp",
+    "Description": "Starry Night - Famous night sky painting with swirling stars.",
+    "CreatedAt": "2025-03-30T00:00:00"
+  },
+  {
+    "Id": "332105c0-0135-4ec5-93a6-94c83665f67e",
+    "UserId": "0be5a75e-8703-4b93-a2e1-c39ac41be478",
+    "ImagePath": "/artworks/default.webp",
+    "Description": "Sunflowers - A vibrant and well-known still-life series.",
+    "CreatedAt": "2025-03-30T00:00:00"
+  }
+]
