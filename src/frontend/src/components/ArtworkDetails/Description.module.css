@@ -1,0 +1,41 @@
+.stats {
+  display: flex;
+  justify-content: center;
+  gap:15px;
+}
+
+@media (max-width: 1200px) {
+  .description {
+    margin-top: 20px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .description {
+    max-width: 576px;
+    margin: auto;
+    height: 90vh;
+    overflow: hidden;
+  }
+
+  .comments {
+    height: 85%;
+    overflow-y: scroll;
+  }
+}
+
+.newComment {
+  max-width: 576px;
+  margin: auto;
+  margin-top: 20px;
+  height: 10vh;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.count {
+  color: black;
+  text-decoration: none;
+  padding: 0;
+}

@@ -1,0 +1,24 @@
+.postHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.postLink {
+  text-decoration: none;
+  padding: 5px;
+}
+
+.postLink:hover {
+  filter: blur(1px);
+}
+
+.userName {
+  padding-left: 5px;
+  color: black;
+}
+
+.posted {
+  margin-left: auto;
+}

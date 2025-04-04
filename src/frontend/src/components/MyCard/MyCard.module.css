@@ -1,0 +1,16 @@
+.card {
+  border: none;
+}
+
+.img {
+  border-radius: 0;
+}
+
+.img:hover {
+  filter: blur(2px);
+}
+
+.btnCount {
+  font-weight: 200;
+  margin-left: 5px;
+}

@@ -1,0 +1,9 @@
+.col {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.userName {
+    font-size: x-large;
+}
