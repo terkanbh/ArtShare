@@ -4,6 +4,11 @@
   gap:15px;
 }
 
+.comments {
+    max-width: 768px;
+    margin: auto;
+}
+
 @media (max-width: 1200px) {
   .description {
     margin-top: 20px;
@@ -12,13 +17,12 @@
 
 @media (min-width: 1200px) {
   .description {
-    max-width: 576px;
-    margin: auto;
     height: 90vh;
     overflow: hidden;
   }
 
   .comments {
+    max-width: 576px;
     height: 85%;
     overflow-y: scroll;
   }
