@@ -8,7 +8,8 @@ public static class UserRequestValidationRules
     {
         return ruleBuilder
             .NotEmpty().WithMessage($"{fieldName} is required.")
-            .MaximumLength(50).WithMessage($"{fieldName} must be less than 50 characters.");
+            .MaximumLength(50).WithMessage($"{fieldName} must be less than 50 characters.")
+            .Matches("[A-Za-z]+").WithMessage($"{fieldName} must contain only letters.");
     }
 
     public static IRuleBuilderOptions<T, string> ApplyEmailRules<T>(this IRuleBuilder<T, string> ruleBuilder)
@@ -25,7 +26,6 @@ public static class UserRequestValidationRules
             .MinimumLength(6).WithMessage("Password must be at least 6 characters long.")
             .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
             .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter.")
-            .Matches("[0-9]").WithMessage("Password must contain at least one digit.")
-            .Matches("[^a-zA-Z0-9]").WithMessage("Password must contain at least one non-alphanumeric character.");
+            .Matches("[0-9]").WithMessage("Password must contain at least one digit.");
     }
 }

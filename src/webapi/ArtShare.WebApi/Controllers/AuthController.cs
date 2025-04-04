@@ -9,11 +9,29 @@ using Microsoft.AspNetCore.Mvc;
 namespace ArtShare.WebApi.Controllers;
 
 [ApiController]
-[Route("/auth")]
 public class AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IValidator<UserRegisterRequest> validator) : Controller
 {
+    [HttpGet()]
+    [Route("api/auth/me")]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        if (User.Identity is null || !User.Identity.IsAuthenticated)
+        {
+            return Unauthorized();
+        }
+
+        var user = await userManager.GetUserAsync(User);
+        
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+
+        return Ok(ResponseMapper.Map(user));
+    }
+
     [HttpPost]
-    [Route("/login")]
+    [Route("/api/auth/login")]
     public async Task<IActionResult> Login(UserLoginRequest req)
     {
         // Check if the user is already authenticated
@@ -38,7 +56,7 @@ public class AuthController(UserManager<User> userManager, SignInManager<User> s
 
     [HttpPost]
     [Authorize]
-    [Route("/logout")]
+    [Route("/api/auth/logout")]
     public async Task<IActionResult> Logout()
     {
         await signInManager.SignOutAsync();
@@ -46,7 +64,7 @@ public class AuthController(UserManager<User> userManager, SignInManager<User> s
     }
 
     [HttpPost]
-    [Route("/register")]
+    [Route("/api/auth/register")]
     public async Task<IActionResult> Register(UserRegisterRequest req)
     {
         // Validate the registration request

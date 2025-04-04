@@ -40,14 +40,14 @@ public class ArtShareDbSeeder(ArtShareDbContext context, UserManager<User> userM
         {
             u.UserName = u.Email;
 
-            if (u.Email == "admin@admin.com")
+            await _userManager.CreateAsync(u, "Pass123");
+
+            if (u.Email == "admin@mail.com")
             {
-                await _userManager.CreateAsync(u, "Admin_123");
                 await _userManager.AddToRoleAsync(u, "Admin");
             }
             else
             {
-                await _userManager.CreateAsync(u, "User_123");
                 await _userManager.AddToRoleAsync(u, "User");
             }
         }
