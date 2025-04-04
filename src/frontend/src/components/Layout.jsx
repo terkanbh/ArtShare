@@ -1,10 +1,10 @@
-import MyNavbar from './MyNavbar.jsx';
+import Navbar from './Navbar.jsx';
 import { Outlet } from 'react-router';
 
 export default function Layout() {
   return (
     <>
-      <MyNavbar />
+      <Navbar />
       <br/>
       <Outlet />
     </>

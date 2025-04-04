@@ -2,20 +2,20 @@
 Artwork sharing website.
 
 ## Core Features
-- User Management (Sign up, Login, Profile)
-- Artwork Sharing (Upload images with descriptions)
+- User Management (Sign up, Login, Profile, CRUD)
+- Artwork Sharing (Upload images with descriptions, CRUD)
 - Interaction (Like and Comment on artworks)
-- Admin Panel (Manage users, delete content)
 - Moderation and Security (Authentication, authorization)
 
 ## Tech Stack
-- Frontend: React + + React Router + Bootstrap
-- Backend: ASP.NET Web API + EF Core
+- Frontend: React + React Router + Bootstrap
+- Backend: ASP.NET Web API + Identity + EF Core
 - Database: SQLite 
-- Authentication: JWT-based
+- Authentication: Cookie based
 - Storage: Local storage for images
 
 ## API Routes 
+- /auth/me
 - /auth/login
 - /auth/logout
 - /auth/register
