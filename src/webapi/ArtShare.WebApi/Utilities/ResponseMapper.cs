@@ -4,6 +4,7 @@ namespace ArtShare.WebApi.Utilities;
 
 public static class ResponseMapper
 {
+    public const string BaseUrl = "http://localhost:5000/images";
     public static object Map(Artwork artwork)
     {
         return new
@@ -33,7 +34,11 @@ public static class ResponseMapper
     {
         return new
         {
-            user.Id, user.FirstName, user.LastName, user.Email, user.ImagePath 
+            user.Id,
+            user.FirstName,
+            user.LastName,
+            user.Email,
+            ImageUrl = $"{BaseUrl}{user.ImagePath}" 
         };
     }
 

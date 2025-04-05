@@ -17,7 +17,7 @@ export default function PostHeader({user, createdAt}) {
     <div className={styles.postHeader}>
       <Link to={`/users/${user.id}`} className={styles.postLink}>
         <img
-          src="/users/default.webp"
+          src={user.imageUrl}
           alt="Avatar"
           className="rounded-circle img-fluid"
           width="40" height="40" />

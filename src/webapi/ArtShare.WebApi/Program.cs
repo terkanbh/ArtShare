@@ -18,5 +18,6 @@ app.SeedDatabase();
 app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
+app.UseStaticFiles();
 
 app.Run();
