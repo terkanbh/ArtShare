@@ -14,8 +14,8 @@ public static class ResponseMapper
             artwork.Description,
             ImageUrl = $"{BaseUrl}{artwork.ImagePath}",
             artwork.UserId,
-            Likes = artwork.Likes.Count,
-            Comments = artwork.Comments.Count,
+            TotalLikes = artwork.Likes.Count,
+            TotalComments = artwork.Comments.Count,
             artwork.CreatedAt
         };
     }

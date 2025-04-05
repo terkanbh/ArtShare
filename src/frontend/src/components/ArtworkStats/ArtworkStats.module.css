@@ -10,11 +10,20 @@
   padding: 0;
 }
 
-.count:hover {
-  color: gold;
-}
-
 .liked {
   color: gold;
   text-decoration: none;
+}
+
+.liked:hover {
+  color: black;
+}
+
+.notLiked {
+  color: black;
+  text-decoration: none;
+}
+
+.notLiked:hover {
+  color: gold;
 }
