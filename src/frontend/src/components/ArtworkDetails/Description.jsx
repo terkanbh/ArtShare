@@ -5,14 +5,19 @@ import Button from 'react-bootstrap/Button';
 import Comment from '../Comment/Comment.jsx';
 import ArtworkStats from '../ArtworkStats/ArtworkStats.jsx';
 
-export default function Description({ artwork, user, comments }) {
+export default function Description({ artwork, user, comments, likedByCurrentUser }) {
   const [currentUser] = useUser();
 
   return (
     <div className={styles.description}>
 
       {/* STATS */}
-      <ArtworkStats artworkId={artwork.id} likes={artwork.likes} comments={artwork.comments} />
+      <ArtworkStats
+        artworkId={artwork.id}
+        likes={artwork.likes}
+        comments={artwork.comments}
+        likedByCurrentUser={likedByCurrentUser}
+      />
 
       {/* COMMENTS */}
       <div className={styles.comments}>

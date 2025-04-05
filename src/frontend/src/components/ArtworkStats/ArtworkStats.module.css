@@ -9,3 +9,12 @@
   text-decoration: none;
   padding: 0;
 }
+
+.count:hover {
+  color: gold;
+}
+
+.liked {
+  color: gold;
+  text-decoration: none;
+}

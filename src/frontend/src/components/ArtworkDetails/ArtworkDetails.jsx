@@ -11,31 +11,38 @@ export default function ArtworkDetails() {
   const [artwork, setArtwork] = useState(null);
   const [user, setUser] = useState(null);
   const [comments, setComments] = useState([]);
+  const [likedByCurrentUser, setLikedByCurrentUser] = useState(false);
 
   useEffect(() => {
     fetch(`http://localhost:5000/api/artworks/${id}`, { credentials: 'include' })
-    .then(res => res.json())
-    .then(data => {
-      setArtwork(data.artwork);
-      setUser(data.user);
-      setComments(data.comments);
-    })
-    .catch(err => console.log(err));
+      .then(res => res.json())
+      .then(data => {
+        setArtwork(data.artwork);
+        setUser(data.user);
+        setComments(data.comments);
+        setLikedByCurrentUser(data.likedByCurrentUser)
+      })
+      .catch(err => console.log(err));
   }, [id])
 
   return (
     <Container fluid className="mb-3">
-      <Row >
-        <Col md={12} xl={7}>
-          <Image />
-        </Col>
-        <Col md={12} xl={5}>
-          {
-            (artwork && user && comments) &&
-            <Description artwork={artwork} user={user} comments={comments}/> 
-          }
-        </Col>
-      </Row>
+      {
+        (artwork && user && comments) &&
+        <Row >
+          <Col md={12} xl={7}>
+            <Image imageUrl={artwork.imageUrl} />
+          </Col>
+          <Col md={12} xl={5}>
+            <Description
+              artwork={artwork}
+              user={user}
+              comments={comments}
+              likedByCurrentUser={likedByCurrentUser}
+            />
+          </Col>
+        </Row>
+      }
     </Container>
   );
 }

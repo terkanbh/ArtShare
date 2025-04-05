@@ -12,7 +12,6 @@ namespace ArtShare.WebApi.Controllers;
 [ApiController]
 [Route("/users")]
 public class UsersController(IValidator<UserUpdateRequest> validator, SignInManager<User> signInManager, UserManager<User> userManager) : Controller
-
 {
     [HttpGet]
     public IActionResult GetUsers()

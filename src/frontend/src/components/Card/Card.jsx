@@ -9,7 +9,7 @@ export default function Card({artwork, user}) {
     <CardBS className={styles.card}>
       <PostHeader user={user} createdAt={artwork.createdAt}/>
       <Link to={`artworks/${artwork.id}`}>
-        <CardBS.Img src="/artworks/default.webp" className={styles.img}/>
+        <CardBS.Img src={artwork.imageUrl} className={styles.img}/>
       </Link>
     </CardBS>
   );
