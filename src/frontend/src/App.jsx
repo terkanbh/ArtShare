@@ -2,7 +2,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { BrowserRouter, Routes, Route } from 'react-router';
 import { UserProvider } from './context/UserProvider.jsx';
-import { ArtworkContextProvider } from './context/ArtworkContextProvider.jsx';
 import Home from './components/Home/Home.jsx';
 import Layout from './components/Layout.jsx';
 import Login from './components/Login/Login.jsx';
@@ -13,7 +12,6 @@ import Profile from './components/UserProfile/Profile.jsx';
 function App() {
   return (
     <UserProvider>
-      <ArtworkContextProvider>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
@@ -25,7 +23,6 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
-      </ArtworkContextProvider>
     </UserProvider>
   );
 }
