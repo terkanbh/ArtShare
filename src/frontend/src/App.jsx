@@ -8,7 +8,7 @@ import Layout from './components/Layout.jsx';
 import Login from './components/Login/Login.jsx';
 import Register from './components/Register/Register.jsx';
 import ArtworkDetails from './components/ArtworkDetails/ArtworkDetails.jsx';
-import UserDetails from './components/UserDetails/UserDetails.jsx';
+import Profile from './components/UserProfile/Profile.jsx';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
               <Route index element={<Home />} />
               <Route path='login' element={<Login />} />
               <Route path='register' element={<Register />} />
-              <Route path='users/:id' element={<UserDetails />} />
+              <Route path='users/:id' element={<Profile />} />
               <Route path='artworks/:id' element={<ArtworkDetails />} />
             </Route>
           </Routes>
