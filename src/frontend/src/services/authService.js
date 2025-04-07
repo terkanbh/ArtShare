@@ -19,6 +19,17 @@ export const login = async (credentials) => {
   throw new Error("Login failed");
 };
 
+export const register = async (form) => {
+  const res = await fetch(`${baseUrl}/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(form),
+    credentials: 'include'
+  });
+  if (res.ok) return await res.json();
+  throw new Error("Register failed");
+};
+
 export const logout = async () => {
   await fetch(`${baseUrl}/logout`, {
     method: 'POST',
