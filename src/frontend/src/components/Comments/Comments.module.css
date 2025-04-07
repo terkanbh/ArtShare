@@ -1,0 +1,12 @@
+.comments {
+    max-width: 768px;
+    margin: auto;
+}
+
+@media (min-width: 1200px) {
+  .comments {
+    max-width: 576px;
+    height: 80%;
+    overflow-y: scroll;
+  }
+}

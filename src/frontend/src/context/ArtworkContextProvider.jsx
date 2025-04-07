@@ -1,10 +1,11 @@
-import { createContext, useContext, useReducer } from 'react';
+import { useImmerReducer } from 'use-immer';
+import { createContext, useContext } from 'react';
 
 export const ArtworkContext = createContext(null);
 export const ArtworkDispatchContext = createContext(null);
 
 export function ArtworkContextProvider({ children }) {
-  const [artwork, dispatch] = useReducer(artworkReducer, null);
+  const [artwork, dispatch] = useImmerReducer(artworkReducer, null);
 
   return (
     <ArtworkContext.Provider value={artwork}>
@@ -15,19 +16,19 @@ export function ArtworkContextProvider({ children }) {
   );
 }
 
-function artworkReducer(state, action) {
+function artworkReducer(draft, action) {
   switch (action.type) {
     case 'fetch':
       return action.artwork;
     case 'toggleLike':
-      const artworkDetails = { ...state };
-      artworkDetails.likedByCurrentUser = action.status === 'liked';
-      artworkDetails.artwork = { ...state.artwork, totalLikes: action.totalLikes };
-      return artworkDetails;
+      draft.likedByCurrentUser = action.status === 'liked';
+      draft.artwork.totalLikes = action.totalLikes;
+      break;
     case 'comment':
-      artworkDetails = { ...state };
-      artworkDetails.comments = [ action.comment, ...state.comments];
-      return artworkDetails;
+      console.log(draft);
+      draft.comments.unshift(action.comment);
+      draft.artwork.totalComments++;
+      break;
   }
 }
 

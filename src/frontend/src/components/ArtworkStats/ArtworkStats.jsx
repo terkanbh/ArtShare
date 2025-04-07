@@ -10,13 +10,14 @@ export default function ArtworkStats() {
   const artworkDispatch = useArtworkDispatch();
 
   const handleLike = () => {
-    toggleLikeArtwork(artworkDetails.artwork.id).then(data => {
-      artworkDispatch({
-        type: 'toggleLike',
-        status: data.status,
-        totalLikes: data.totalLikes
+    toggleLikeArtwork(artworkDetails.artwork.id)
+      .then(data => {
+        artworkDispatch({
+          type: 'toggleLike',
+          status: data.status,
+          totalLikes: data.totalLikes
+        });
       });
-    });
   }
 
   return (
