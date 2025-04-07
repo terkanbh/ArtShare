@@ -22,13 +22,18 @@ public static class ResponseMapper
 
     public static object Map(ICollection<Comment> comments)
     {
-        return comments.Select(c => new
+        return comments.Select(c => Map(c));
+    }
+
+    public static object Map(Comment comment)
+    {
+        return new
         {
-            c.Id,
-            c.Text,
-            c.CreatedAt,
-            User = Map(c.User!)
-        });
+            comment.Id,
+            comment.Text,
+            comment.CreatedAt,
+            User = Map(comment.User!)
+        };
     }
 
     public static object Map(User user)
