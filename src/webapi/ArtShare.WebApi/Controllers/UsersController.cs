@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using ArtShare.WebApi.Data;
 using ArtShare.WebApi.Data.Models;
 using ArtShare.WebApi.Requests;
 using ArtShare.WebApi.Utilities;
@@ -6,14 +7,14 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ArtShare.WebApi.Controllers;
 
 [ApiController]
-[Route("/users")]
-public class UsersController(IValidator<UserUpdateRequest> validator, SignInManager<User> signInManager, UserManager<User> userManager) : Controller
+public class UsersController(ArtShareDbContext context, IValidator<UserUpdateRequest> validator, SignInManager<User> signInManager, UserManager<User> userManager) : Controller
 {
-    [HttpGet]
+    [HttpGet("/api/users")]
     public IActionResult GetUsers()
     {
         var users = userManager.Users.Select(u => ResponseMapper.Map(u));
@@ -22,7 +23,7 @@ public class UsersController(IValidator<UserUpdateRequest> validator, SignInMana
     }
 
     [HttpGet]
-    [Route("/users/{id}")]
+    [Route("/api/users/{id}")]
     public async Task<IActionResult> GetUser(string id)
     {
         var user = await userManager.FindByIdAsync(id);
@@ -35,9 +36,34 @@ public class UsersController(IValidator<UserUpdateRequest> validator, SignInMana
         return Ok(ResponseMapper.Map(user));
     }
 
+    [HttpGet]
+    [Route("/api/users/{id}/artworks")]
+    public IActionResult GetUserWithArtworks(string id)
+    {
+        var user = context.Users
+            .Where(u => u.Id == id)
+            .Include(u => u.Artworks)
+                .ThenInclude(a => a.Likes)
+            .Include(u => u.Artworks)
+                .ThenInclude(a => a.Comments)
+            .Select(u => new
+            {
+                User = ResponseMapper.Map(u),
+                Artworks = u.Artworks.Select(a => ResponseMapper.Map(a))
+            })
+            .FirstOrDefault();
+
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(user);
+    }
+
     [HttpPut]
     [Authorize]
-    [Route("/users/{id}")]
+    [Route("/api/users/{id}")]
     public async Task<IActionResult> Update(string id, UserUpdateRequest req)
     {
         // Retrieve the authenticated user's ID from claims
@@ -85,7 +111,7 @@ public class UsersController(IValidator<UserUpdateRequest> validator, SignInMana
 
     [HttpDelete]
     [Authorize]
-    [Route("/users/{id}")]
+    [Route("/api/users/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
         // Retrieve the authenticated user's ID from claims
