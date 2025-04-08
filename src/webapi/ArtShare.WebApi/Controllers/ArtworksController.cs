@@ -1,7 +1,9 @@
 using System.Security.Claims;
 using ArtShare.WebApi.Data;
 using ArtShare.WebApi.Data.Models;
+using ArtShare.WebApi.Requests;
 using ArtShare.WebApi.Utilities;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ArtShare.WebApi.Controllers;
 
 [ApiController]
-public class ArtworksController(ArtShareDbContext context) : Controller
+public class ArtworksController(ArtShareDbContext context, IValidator<ArtworkCreateRequest> validator) : Controller
 {
     [HttpGet]
     [Route("/api/artworks")]
@@ -37,25 +39,9 @@ public class ArtworksController(ArtShareDbContext context) : Controller
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        var artwork = context.Artworks
-            .Where(a => a.Id == id)
-            .Include(a => a.User)
-            .Include(a => a.Likes)
-            .Include(a => a.Comments)
-            .ThenInclude(c => c.User)
-            .Select(a => new
-            {
-                Artwork = ResponseMapper.Map(a),
-                User = ResponseMapper.Map(a.User!),
-                Comments = ResponseMapper.Map(a.Comments),
-                LikedByCurrentUser = userId != null && a.Likes.Any(l => l.UserId == userId)
-            })
-            .FirstOrDefault();
+        var artwork = GetArtworkWithUserAndCommentsResponse(id, userId);
 
-        if (artwork is null)
-        {
-            return NotFound();
-        }
+        if (artwork is null) return NotFound();
 
         return Ok(artwork);
     }
@@ -67,10 +53,7 @@ public class ArtworksController(ArtShareDbContext context) : Controller
     {
         // Get user ID from claims
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId is null)
-        {
-            return Unauthorized();
-        }
+        if (userId is null) return Unauthorized();
 
         // Fetch artwork and likes
         var artwork = await context.Artworks
@@ -128,6 +111,44 @@ public class ArtworksController(ArtShareDbContext context) : Controller
         });
     }
 
+    [HttpPost]
+    [Authorize]
+    [Route("/api/artworks")]
+    public async Task<IActionResult> Create(ArtworkCreateRequest req)
+    {
+        // Get user ID from claims
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userId is null) return Unauthorized();
+
+        var validationResult = validator.Validate(req);
+
+        if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
+
+        var newArtworkId = Guid.NewGuid().ToString();
+        var savePath = "wwwroot/images/artworks";
+
+        Directory.CreateDirectory(savePath);
+
+        var filePath = Path.Combine(savePath, $"{newArtworkId}.webp");
+        using var stream = new FileStream(filePath, FileMode.Create);
+        await req.Image.CopyToAsync(stream);
+
+        context.Artworks.Add(new Artwork
+        {
+            Id = newArtworkId,
+            UserId = userId,
+            Description = req.Description,
+            ImagePath = $"/artworks/{newArtworkId}.webp",
+            CreatedAt = DateTime.Now
+        });
+
+        await context.SaveChangesAsync();
+
+        var createdArtwork = GetArtworkWithUserAndCommentsResponse(newArtworkId, userId);
+
+        return Ok(createdArtwork);
+    }
+
     [HttpGet]
     [Route("/api/artworks/checkOwnership/{id}")]
     public IActionResult CheckOwnership(string id)
@@ -143,5 +164,25 @@ public class ArtworksController(ArtShareDbContext context) : Controller
         if (artwork.UserId != userId) return Unauthorized();
 
         return Ok();
+    }
+
+    private object? GetArtworkWithUserAndCommentsResponse(string artworkId, string? currentUserId)
+    {
+        var artwork = context.Artworks
+            .Where(a => a.Id == artworkId)
+            .Include(a => a.User)
+            .Include(a => a.Likes)
+            .Include(a => a.Comments)
+            .ThenInclude(c => c.User)
+            .Select(a => new
+            {
+                Artwork = ResponseMapper.Map(a),
+                User = ResponseMapper.Map(a.User!),
+                Comments = ResponseMapper.Map(a.Comments),
+                LikedByCurrentUser = currentUserId != null && a.Likes.Any(l => l.UserId == currentUserId)
+            })
+            .FirstOrDefault();
+
+        return artwork;
     }
 }
