@@ -127,4 +127,21 @@ public class ArtworksController(ArtShareDbContext context) : Controller
             TotalLikes = totalLikes
         });
     }
+
+    [HttpGet]
+    [Route("/api/artworks/checkOwnership/{id}")]
+    public IActionResult CheckOwnership(string id)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (userId is null) return Unauthorized();
+
+        var artwork = context.Artworks.Find(id);
+
+        if (artwork is null) return NotFound();
+
+        if (artwork.UserId != userId) return Unauthorized();
+
+        return Ok();
+    }
 }
