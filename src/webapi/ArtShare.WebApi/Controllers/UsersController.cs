@@ -106,7 +106,7 @@ public class UsersController(ArtShareDbContext context, IValidator<UserUpdateReq
             return BadRequest(ResponseMapper.MapError("Update failed.", errorMessages));
         }
 
-        return NoContent();
+        return Ok(ResponseMapper.Map(user));
     }
 
     [HttpDelete]

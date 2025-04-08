@@ -9,7 +9,7 @@ public static class UserRequestValidationRules
         return ruleBuilder
             .NotEmpty().WithMessage($"{fieldName} is required.")
             .MaximumLength(50).WithMessage($"{fieldName} must be less than 50 characters.")
-            .Matches("[A-Za-z]+").WithMessage($"{fieldName} must contain only letters.");
+            .Matches("^[A-Za-z]+(?: [A-Za-z]+)*$").WithMessage($"{fieldName} must contain only letters.");
     }
 
     public static IRuleBuilderOptions<T, string> ApplyEmailRules<T>(this IRuleBuilder<T, string> ruleBuilder)
