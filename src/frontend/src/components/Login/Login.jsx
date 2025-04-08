@@ -11,31 +11,51 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 export default function Login() {
-  const [_, setUser] = useUser();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(true);
-  const [emailIsValid, setEmailIsValid] = useState(true);
-  const [passwordIsValid, setPasswordIsValid] = useState(true);
-  const [loginFail, setLoginFail] = useState(false);
+  const [errorResponse, setErrorResponse] = useState(false);
+  const [, setUser] = useUser();
   const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    rememberMe: true,
+  });
+
+  const [formValidity, setFormValidity] = useState({
+    email: true,
+    password: true,
+  });
+
+
+  const handleChange = (field) => (e) => {
+    const value = field === 'rememberMe' ? e.target.checked : e.target.value;
+    setFormData({ ...formData, [field]: value });
+
+    if (field in formValidity && !formValidity[field]) {
+      setFormValidity({ ...formValidity, [field]: true });
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const validEmail = validateEmail(email);
-    const validPassword = validatePassword(password);
-    setEmailIsValid(validEmail);
-    setPasswordIsValid(validPassword);
+    const newValidity = {
+      email: validateEmail(formData.email),
+      password: validatePassword(formData.password),
+    };
 
-    if (validEmail && validPassword) {
-      login({email, password, rememberMe})
-        .then(res => {
-          setUser(res);
-          navigate('/');
+    setFormValidity(newValidity);
+
+    const isFormValid = Object.values(newValidity).every(Boolean);
+
+    if (!isFormValid) return;
+
+    login(formData)
+      .then((res) => {
+        setUser(res);
+        navigate('/');
       })
-        .catch(_ => setLoginFail(true));
-    }
+      .catch(() => setErrorResponse(true));
   };
 
   return (
@@ -43,55 +63,35 @@ export default function Login() {
       <Row className="justify-content-center">
         <Col md={6}>
           <h1>Login</h1>
-
           <Form onSubmit={handleSubmit}>
 
-            {/* EMAIL */}
-            <Form.Group className="mb-3">
-              <FloatingLabel label="Email">
-                <Form.Control type="email" value={email} isInvalid={!emailIsValid}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (!emailIsValid) setEmailIsValid(true);
-                  }}
-                />
-                <Form.Control.Feedback type="invalid"> Invalid email </Form.Control.Feedback>
-              </FloatingLabel>
-            </Form.Group>
+            {/* Email */}
+            <FloatingLabel label="Email" className="mb-3">
+              <Form.Control type="email" value={formData.email} onChange={handleChange('email')} isInvalid={!formValidity.email} />
+              <Form.Control.Feedback type="invalid"> Invalid email </Form.Control.Feedback>
+            </FloatingLabel>
 
-            {/* PASSWORD */}
-            <Form.Group className="mb-3">
-              <FloatingLabel label="Password">
-                <Form.Control type="password" value={password} isInvalid={!passwordIsValid}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (!passwordIsValid) setPasswordIsValid(true);
-                  }}
-                />
-                <Form.Control.Feedback type="invalid"> Invalid password </Form.Control.Feedback>
-              </FloatingLabel>
-            </Form.Group>
+            {/* Password */}
+            <FloatingLabel label="Password" className="mb-3">
+              <Form.Control type="password" value={formData.password} onChange={handleChange('password')} isInvalid={!formValidity.password} />
+              <Form.Control.Feedback type="invalid"> Invalid password </Form.Control.Feedback>
+            </FloatingLabel>
 
-            {/* REMEMBER ME? */}
+            {/* Remember Me */}
             <Form.Group className="mb-3" style={{ paddingLeft: '5px' }}>
-              <Form.Check type="checkbox" label="Remember me?" checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.value)}
-              />
+              <Form.Check type="checkbox" label="Remember me?" checked={formData.rememberMe} onChange={handleChange('rememberMe')} />
             </Form.Group>
 
-            {/* SUBMIT */}
-            <div>
-              <Button variant="primary" type="submit">
-                Submit
-              </Button>
+            {/* Login fail */}
+            {
+              errorResponse &&
+              <span className="invalid-feedback mb-3" style={{ display: 'block' }}>
+                Invalid login
+              </span>
+            }
 
-              {
-                loginFail &&
-                <span className="invalid-feedback" style={{display: 'block'}}>
-                  Invalid login
-                </span>
-              }
-            </div>
+            {/* Submit */}
+            <Button variant="primary" type="submit"> Submit </Button>
 
           </Form>
         </Col>
