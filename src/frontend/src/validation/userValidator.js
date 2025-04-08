@@ -9,6 +9,6 @@ export function validatePassword(password) {
 }
 
 export function validateName(name) {
-  const regex = /^[A-Za-z]{1,50}$/;
+  const regex = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
   return regex.test(name);
 }

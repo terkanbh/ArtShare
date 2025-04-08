@@ -31,7 +31,7 @@ function App() {
             
             {/* Artwork Routes */}
             <Route path="artworks/new" element={<PrivateRoute element={<CreateArtwork />} />} />
-            <Route path="artworks/update/:id" element={<ProtectedArtworkSettings element={<UpdateArtwork />} />} />
+            <Route path="artworks/settings/:id" element={<ProtectedArtworkSettings element={<UpdateArtwork />} />} />
             <Route path="artworks/:id" element={<ArtworkDetails />} />
 
             </Route>
