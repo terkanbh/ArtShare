@@ -14,3 +14,11 @@ export const toggleLikeArtwork = async (id) => {
     if (res.ok) return await res.json();
     throw new Error('There was a problem while trying to like/unlike artwork');
 }
+
+export const checkOwnership = async (id) => {
+    const res = await fetch(`${baseUrl}/checkOwnership/${id}`, {
+      credentials: 'include'
+    });
+    if (res.ok) return "Success";
+    throw new Error('Unauthorized');
+}

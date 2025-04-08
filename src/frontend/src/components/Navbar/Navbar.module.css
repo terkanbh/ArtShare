@@ -1,0 +1,11 @@
+.linkIcon {
+    font-size: x-large;
+}
+
+.logout {
+    font-size: x-large;
+}
+
+.logout:hover {
+  cursor: pointer;
+}

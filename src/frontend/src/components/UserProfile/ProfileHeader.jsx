@@ -16,7 +16,7 @@ export default function ProfileHeader({user}) {
               width="120" height="120" />
           </div>
           <span className={styles.userName}>
-            {user.email}
+            {user.firstName + ' ' + user.lastName}
           </span>
         </Col>
       </Row>

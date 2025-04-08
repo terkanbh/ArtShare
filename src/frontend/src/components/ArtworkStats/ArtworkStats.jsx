@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import { useUser } from '../../context/UserProvider.jsx';
 import { toggleLikeArtwork } from '../../services/artworksService.js';
 import { useArtwork, useArtworkDispatch } from '../../context/ArtworkContextProvider.jsx';
@@ -30,6 +31,12 @@ export default function ArtworkStats() {
           <i className="bi bi-chat-dots-fill"></i>
           <span> {artworkDetails.artwork.totalComments} </span>
         </Button>
+        {
+          currentUser && currentUser.id === artworkDetails.user.id &&
+          <Link to={`/artworks/settings/${artworkDetails.artwork.id}`} className={'nav-link ' + styles.linkIcon}>
+            <i className="bi bi-gear-fill"></i>
+          </Link>
+        }
       </div>
     );
 }
