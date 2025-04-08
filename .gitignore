@@ -3,4 +3,5 @@
 **/node_modules
 **/.vscode
 **/database
+**/wwwroot
 **/.DS_Store
