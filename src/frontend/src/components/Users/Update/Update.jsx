@@ -9,6 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Delete from '../Delete/Delete.jsx';
 
 export default function Edit() {
   const [user, setUser] = useUser();
@@ -89,8 +90,10 @@ export default function Edit() {
             }
 
             {/* Submit */}
-            <Button variant="primary" type="submit"> Update Profile </Button>
+            <Button variant="primary" type="submit" className="me-3"> Update </Button>
 
+            {/* Delete */}
+            <Delete id={user.id} />
           </Form>
         </Col>
       </Row>
