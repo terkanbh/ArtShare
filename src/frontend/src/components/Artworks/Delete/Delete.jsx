@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { deleteArtwork } from "../../../services/artworksService.js";
 import { useUser } from '../../../context/UserProvider.jsx';
-import { deleteUser } from '../../../services/usersService.js';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 
-export default function Delete({setErrorResponse}) {
-  const [user, setUser] = useUser();
+export default function Delete({ artworkId, setErrorResponse }) {
+  const [user] = useUser();
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
 
@@ -14,11 +14,8 @@ export default function Delete({setErrorResponse}) {
   const handleClose = () => setShow(false);
 
   const handleDelete = () => {
-    deleteUser(user.id)
-      .then(() => {
-        setUser(null);
-        navigate('/');
-      })
+    deleteArtwork(artworkId)
+      .then(() => navigate(`/users/${user.id}`))
       .catch(() => {
         setErrorResponse(true);
         setShow(false);
@@ -27,13 +24,13 @@ export default function Delete({setErrorResponse}) {
 
   return (
     <>
-      <Button variant="danger" onClick={handleShow}>Delete</Button>
+      <Button variant="danger" onClick={handleShow}>Delete Artwork</Button>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Are you sure you want to delete your profile?</Modal.Body>
+        <Modal.Body>Are you sure you want to delete this artwork?</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>Cancel</Button>
           <Button variant="danger" onClick={handleDelete}>Confirm Delete</Button>

@@ -47,7 +47,7 @@ export default function Create() {
 
     if (!isFormValid) return;
 
-    createArtwork(formData)
+    createArtwork({description: formData.description})
       .then(res => navigate(`/artworks/${res.artwork.id}`))
       .catch(() => setErrorResponse('Upload artwork failed'))
   };
@@ -67,7 +67,7 @@ export default function Create() {
 
             {/* Description */}
             <FloatingLabel label="Description" className="mb-3">
-              <Form.Control type="text" value={formData.description} onChange={handleChange('description')} isInvalid={!formValidity.description} />
+              <Form.Control type="text" value={formData.description} onChange={handleChange('description')} isInvalid={!formValidity.description} style={{ height: '100px'}} />
               <Form.Control.Feedback type="invalid"> Description must be 1-500 characters. </Form.Control.Feedback>
             </FloatingLabel>
 

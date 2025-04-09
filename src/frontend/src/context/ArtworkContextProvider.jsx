@@ -25,7 +25,6 @@ function artworkReducer(draft, action) {
       draft.artwork.totalLikes = action.totalLikes;
       break;
     case 'comment':
-      console.log(draft);
       draft.comments.unshift(action.comment);
       draft.artwork.totalComments++;
       break;

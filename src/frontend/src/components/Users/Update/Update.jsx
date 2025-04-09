@@ -93,7 +93,8 @@ export default function Edit() {
             <Button variant="primary" type="submit" className="me-3"> Update </Button>
 
             {/* Delete */}
-            <Delete id={user.id} />
+            <Delete setErrorResponse={setErrorResponse}/>
+
           </Form>
         </Col>
       </Row>
