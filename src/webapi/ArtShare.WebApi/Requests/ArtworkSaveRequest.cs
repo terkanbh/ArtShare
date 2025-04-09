@@ -1,8 +1,7 @@
 namespace ArtShare.WebApi.Requests;
 
-public class ArtworkCreateRequest
+public class ArtworkSaveRequest
 {
-    public IFormFile Image { get; set; } = null!;
     public string Description { get; set; } = "";
 }
 

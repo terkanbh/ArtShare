@@ -11,14 +11,89 @@ using Microsoft.EntityFrameworkCore;
 namespace ArtShare.WebApi.Controllers;
 
 [ApiController]
-public class ArtworksController(ArtShareDbContext context, IValidator<ArtworkCreateRequest> validator) : Controller
+public class ArtworksController(
+    ArtShareDbContext context,
+    IValidator<ArtworkSaveRequest> validator) : Controller
 {
+    [HttpGet]
+    [Route("/api/artworks/checkOwnership/{id}")]
+    public IActionResult CheckOwnership(string id)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userId is null) return Unauthorized();
+
+        var artwork = context.Artworks.Find(id);
+        if (artwork is null) return NotFound();
+        if (artwork.UserId != userId) return Unauthorized();
+
+        return Ok();
+    }
+
+    [HttpPost]
+    [Authorize]
+    [Route("/api/artworks")]
+    public async Task<IActionResult> Create(ArtworkSaveRequest req)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userId is null) return Unauthorized();
+
+        var validationResult = validator.Validate(req);
+        if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
+
+        var newArtworkId = Guid.NewGuid().ToString();
+        context.Artworks.Add(new Artwork
+        {
+            Id = newArtworkId,
+            UserId = userId,
+            Description = req.Description,
+            ImagePath = "/artworks/default.webp",
+            CreatedAt = DateTime.Now
+        });
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch
+        {
+            return StatusCode(500);
+        }
+
+        var createdArtwork = GetArtworkWithUserAndCommentsResponse(newArtworkId, userId);
+        return Ok(createdArtwork);
+    }
+
+    [HttpDelete]
+    [Authorize]
+    [Route("/api/artworks/{artworkId}")]
+    public async Task<IActionResult> Delete(string artworkId)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userId is null) return Unauthorized();
+
+        var artwork = await context.Artworks.FindAsync(artworkId);
+        if (artwork is null) return NotFound();
+        if (artwork.UserId != userId) return Unauthorized();
+
+        context.Artworks.Remove(artwork);
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch
+        {
+            return StatusCode(500, ResponseMapper.MapError("An error occurred while deleting the artwork.", []));
+        }
+
+        return Ok(new { Message = "Artwork deleted successfully" });
+    }
+
     [HttpGet]
     [Route("/api/artworks")]
     public IActionResult GetArtworksWithUser()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
         var artworks = context.Artworks
             .Include(a => a.User)
             .Include(a => a.Likes)
@@ -38,9 +113,7 @@ public class ArtworksController(ArtShareDbContext context, IValidator<ArtworkCre
     public IActionResult GetArtworkWithUserAndComments(string id)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
         var artwork = GetArtworkWithUserAndCommentsResponse(id, userId);
-
         if (artwork is null) return NotFound();
 
         return Ok(artwork);
@@ -51,34 +124,24 @@ public class ArtworksController(ArtShareDbContext context, IValidator<ArtworkCre
     [Route("/api/artworks/toggle-like/{id}")]
     public async Task<IActionResult> ToggleLike(string id)
     {
-        // Get user ID from claims
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userId is null) return Unauthorized();
 
-        // Fetch artwork and likes
         var artwork = await context.Artworks
             .Include(a => a.Likes)
             .SingleOrDefaultAsync(a => a.Id == id);
+        if (artwork is null) return NotFound();
 
-        if (artwork is null)
-        {
-            return NotFound();
-        }
-
-        // Check if user has already liked the artwork
         var existingLike = artwork.Likes.FirstOrDefault(l => l.UserId == userId);
-
         string actionTaken;
 
         if (existingLike is not null)
         {
-            // User already liked → unlike
             context.Likes.Remove(existingLike);
             actionTaken = "unliked";
         }
         else
         {
-            // User has not liked → like
             var newLike = new Like
             {
                 Id = Guid.NewGuid().ToString(),
@@ -99,71 +162,42 @@ public class ArtworksController(ArtShareDbContext context, IValidator<ArtworkCre
             return StatusCode(500, ResponseMapper.MapError("An error occurred while toggling the like.", []));
         }
 
-        // Get total likes
-        var totalLikes = artwork.Likes.Count;
-
         return Ok(new
         {
             ArtworkId = id,
             UserId = userId,
             Status = actionTaken,
-            TotalLikes = totalLikes
+            TotalLikes = artwork.Likes.Count
         });
     }
 
-    [HttpPost]
+    [HttpPut]
     [Authorize]
-    [Route("/api/artworks")]
-    public async Task<IActionResult> Create(ArtworkCreateRequest req)
+    [Route("/api/artworks/{artworkId}")]
+    public async Task<IActionResult> Update(string artworkId, ArtworkSaveRequest req)
     {
-        // Get user ID from claims
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userId is null) return Unauthorized();
+
+        var artwork = await context.Artworks.FindAsync(artworkId);
+        if (artwork is null || artwork.UserId != userId) return NotFound();
 
         var validationResult = validator.Validate(req);
-
         if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
 
-        var newArtworkId = Guid.NewGuid().ToString();
-        var savePath = "wwwroot/images/artworks";
+        artwork.Description = req.Description;
 
-        Directory.CreateDirectory(savePath);
-
-        var filePath = Path.Combine(savePath, $"{newArtworkId}.webp");
-        using var stream = new FileStream(filePath, FileMode.Create);
-        await req.Image.CopyToAsync(stream);
-
-        context.Artworks.Add(new Artwork
+        try
         {
-            Id = newArtworkId,
-            UserId = userId,
-            Description = req.Description,
-            ImagePath = $"/artworks/{newArtworkId}.webp",
-            CreatedAt = DateTime.Now
-        });
+            await context.SaveChangesAsync();
+        }
+        catch
+        {
+            return StatusCode(500);
+        }
 
-        await context.SaveChangesAsync();
-
-        var createdArtwork = GetArtworkWithUserAndCommentsResponse(newArtworkId, userId);
-
-        return Ok(createdArtwork);
-    }
-
-    [HttpGet]
-    [Route("/api/artworks/checkOwnership/{id}")]
-    public IActionResult CheckOwnership(string id)
-    {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (userId is null) return Unauthorized();
-
-        var artwork = context.Artworks.Find(id);
-
-        if (artwork is null) return NotFound();
-
-        if (artwork.UserId != userId) return Unauthorized();
-
-        return Ok();
+        var updatedArtwork = GetArtworkWithUserAndCommentsResponse(artworkId, userId);
+        return Ok(updatedArtwork);
     }
 
     private object? GetArtworkWithUserAndCommentsResponse(string artworkId, string? currentUserId)

@@ -23,3 +23,28 @@ Artwork sharing website.
 - /users/id (GET)
 - /users/id (PUT)
 - /users/id (DELETE)
+
+## Required Tools & Versions
+- __.NET SDK__ → Ensure you have .NET 8.0 installed
+- __Node.js__ → Recommended version 18.x or newer
+
+## Setup
+```
+### Clone the repo:
+git clone https://github.com/terkanbh/ArtShare
+
+### Start the backend:
+cd ArtShare.WebApi
+dotnet run
+
+### Start the frontend:
+cd /frontend
+npm install
+npm run dev
+```
+
+## Access the Application
+```
+Backend API: http://localhost:5000/swagger/index.html
+Frontend: http://localhost:3000
+```
