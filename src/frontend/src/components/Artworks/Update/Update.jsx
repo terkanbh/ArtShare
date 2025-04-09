@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { getArtwork, updateArtwork } from '../../../services/artworksService.js';
 import { validateImage, validateDescription } from '../../../validation/artworkValidator.js';
+import { uploadImage } from '../../../services/imagesService.js';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
@@ -59,7 +60,14 @@ export default function EditArtwork() {
     if (!isFormValid) return;
 
     updateArtwork(id, {description: formData.description})
-      .then(() => navigate(`/artworks/${id}`))
+      .then((res) => {
+        if (formData.image) {
+          uploadImage(res.artwork.id, formData.image)
+            .then(res => console.log(res))
+            .catch(e => console.error(e))
+            .finally(() => navigate(`/artworks/${res.artwork.id}`));
+        }
+      })
       .catch(() => setErrorResponse('Update artwork failed'));
   };
 

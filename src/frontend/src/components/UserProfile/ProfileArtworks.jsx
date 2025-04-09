@@ -9,7 +9,7 @@ export default function ProfileArtworks({artworks}) {
     <Col sm={12} md={6} lg={4} key={a.id}>
       <Link to={`/artworks/${a.id}`}>
         <div className={styles.imageWrapper}>
-          <img src={a.imageUrl} alt="artwork-image" className={styles.img} />
+          <img src={a.imageUrl + `?timestamp=${new Date().getTime()}`} alt="artwork-image" className={styles.img} />
         </div>
       </Link>
     </Col>

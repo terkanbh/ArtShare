@@ -25,7 +25,7 @@ function DetailsWrapper({ id }) {
     <Container fluid className="mb-3">
       <Row >
         <Col md={12} xl={7}>
-          <Image imageUrl={artworkDetails.artwork.imageUrl} />
+          <Image imageUrl={artworkDetails.artwork.imageUrl + `?timestamp=${new Date().getTime()}`} />
         </Col>
         <Col md={12} xl={5}>
           <Description />

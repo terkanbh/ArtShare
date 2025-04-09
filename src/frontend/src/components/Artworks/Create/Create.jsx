@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { createArtwork } from '../../../services/artworksService.js';
+import { uploadImage } from '../../../services/imagesService.js';
 import { validateImage, validateDescription } from '../../../validation/artworkValidator.js';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
@@ -48,8 +49,13 @@ export default function Create() {
     if (!isFormValid) return;
 
     createArtwork({description: formData.description})
-      .then(res => navigate(`/artworks/${res.artwork.id}`))
-      .catch(() => setErrorResponse('Upload artwork failed'))
+      .then(res => {
+        if (formData.image) {
+          uploadImage(res.artwork.id, formData.image)
+            .finally(() => navigate(`/artworks/${res.artwork.id}`));
+        }
+      })
+      .catch(() => setErrorResponse(true));
   };
 
   return (
@@ -67,7 +73,7 @@ export default function Create() {
 
             {/* Description */}
             <FloatingLabel label="Description" className="mb-3">
-              <Form.Control type="text" value={formData.description} onChange={handleChange('description')} isInvalid={!formValidity.description} style={{ height: '100px'}} />
+              <Form.Control as="textarea" value={formData.description} onChange={handleChange('description')} isInvalid={!formValidity.description} style={{ height: '100px'}} />
               <Form.Control.Feedback type="invalid"> Description must be 1-500 characters. </Form.Control.Feedback>
             </FloatingLabel>
 
