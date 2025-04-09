@@ -75,6 +75,9 @@ public class ArtworksController(
         if (artwork is null) return NotFound();
         if (artwork.UserId != userId) return Unauthorized();
 
+        var filePath = Path.Combine("wwwroot/images/artworks", $"{artworkId}.webp");
+        if (System.IO.File.Exists(filePath)) System.IO.File.Delete(filePath);
+
         context.Artworks.Remove(artwork);
 
         try

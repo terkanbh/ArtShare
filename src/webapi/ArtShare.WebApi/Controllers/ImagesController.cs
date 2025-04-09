@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArtShare.WebApi.Controllers;
+
 [ApiController]
 [Route("/api/images")]
 public class ImagesController(
