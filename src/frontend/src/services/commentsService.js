@@ -1,7 +1,7 @@
 const baseUrl = 'http://localhost:5000/api/comments';
 
-export const createComment = async (newComment) => {
-    const res = await fetch(baseUrl, {
+export const createComment = async (artworkId, newComment) => {
+    const res = await fetch(baseUrl + `/${artworkId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newComment),

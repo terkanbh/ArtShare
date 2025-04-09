@@ -22,7 +22,7 @@ export default function NewComment() {
       return;
     }
     
-    createComment({artworkId: artworkDetails.artwork.id, text: input})
+    createComment(artworkDetails.artwork.id, {text: input})
       .then(data => {
         artworkDispatch({type: 'comment', comment: data});
         setInput('');
