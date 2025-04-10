@@ -8,7 +8,8 @@ import Container from '../../shared/Container.jsx';
 import ImageViewer from '../../shared/ImageViewer/ImageViewer.jsx';
 import { createArtwork } from '../../../services/artworksService.js';
 import { uploadImage } from '../../../services/imagesService.js';
-import { validateImage, validateDescription } from '../../../validation/artworkValidator.js';
+import { validateDescription } from '../../../validation/artworkValidator.js';
+import { validateImage } from '../../../validation/imageValidator.js';
 
 export default function Create() {
   const [errorResponse, setErrorResponse] = useState(false);
@@ -52,7 +53,7 @@ export default function Create() {
     createArtwork({ description: formData.description })
       .then(res => {
         if (formData.image) {
-          uploadImage(res.artwork.id, formData.image)
+          uploadImage('artworks', res.artwork.id, formData.image)
             .finally(() => navigate(`/artworks/${res.artwork.id}`));
         } else {
           navigate(`/artworks/${res.artwork.id}`);

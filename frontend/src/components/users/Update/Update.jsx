@@ -6,7 +6,9 @@ import Button from 'react-bootstrap/Button';
 
 import { useAuth } from '../../../hooks/useAuth.jsx';
 import { updateUser } from '../../../services/usersService.js';
+import { uploadImage } from '../../../services/imagesService.js';
 import { validateName, validateEmail } from '../../../validation/userValidator.js';
+import { validateImage } from '../../../validation/imageValidator.js';
 import Delete from '../Delete/Delete.jsx';
 import Container from '../../shared/Container.jsx';
 import ImageViewer from '../../shared/ImageViewer/ImageViewer.jsx';
@@ -20,26 +22,36 @@ export default function Update() {
     firstName: auth.firstName,
     lastName: auth.lastName,
     email: auth.email,
+    image: null
   });
 
   const [formValidity, setFormValidity] = useState({
     firstName: true,
     lastName: true,
     email: true,
+    image: true
   });
 
   const handleChange = (field) => (e) => {
-    setFormData({ ...formData, [field]: e.target.value });
+    let newValue = null;
+    switch (field) {
+      case 'image': newValue = e.target.files[0]; break;
+      default: newValue = e.target.value;
+    }
+
+    setFormData({ ...formData, [field]: newValue });
+
     if (!formValidity[field]) setFormValidity({ ...formValidity, [field]: true });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newValidity = {
       firstName: validateName(formData.firstName),
       lastName: validateName(formData.lastName),
       email: validateEmail(formData.email),
+      image: validateImage(formData.image)
     };
 
     setFormValidity(newValidity);
@@ -48,12 +60,19 @@ export default function Update() {
 
     if (!isFormValid) return;
 
-    updateUser(auth.id, formData)
-      .then(user => {
-        setAuth(user);
-        navigate(`/users/${user.id}`);
-      })
-      .catch(() => setErrorResponse(true));
+    try {
+      const { image, ...updateUserForm } = { ...formData };
+      const userRes = await updateUser(auth.id, updateUserForm);
+
+      try {
+        if(image) {
+          await uploadImage('users', auth.id, image);
+        }
+      } catch { console.error('Update user image failed.'); }
+
+      setAuth(userRes);
+      navigate(`/users/${auth.id}`);
+    } catch (e) { setErrorResponse(true); }
   };
 
   return (
@@ -61,6 +80,12 @@ export default function Update() {
       <h1>Update Profile</h1>
       <ImageViewer imageUrl={auth.imageUrl} />
       <Form onSubmit={handleSubmit}>
+
+        {/* Image Upload */}
+        <Form.Group className="mb-3">
+          <Form.Control type="file" size="lg" accept=".webp" onChange={handleChange('image')} isInvalid={!formValidity.image} />
+          <Form.Control.Feedback type="invalid"> Image must be `.webp` and under 40KB. </Form.Control.Feedback>
+        </Form.Group>
 
         {/* First Name */}
         <FloatingLabel label="First Name" className="mb-3">
