@@ -62,10 +62,11 @@ export default function Search() {
 
 
   const handleSubmit = _ => {
+    const normalizedInput = input.toLowerCase();
     setFilteredUsers(users.filter(u =>
-      u.email.substr(0, u.email.indexOf('@')).includes(input) ||
-      u.firstName.includes(input) ||
-      u.lastName.includes(input)));
+      u.email.toLowerCase().substr(0, u.email.indexOf('@')).includes(normalizedInput) ||
+      u.firstName.toLowerCase().includes(normalizedInput) ||
+      u.lastName.toLowerCase().includes(normalizedInput)));
   }
 
   const handleClear = _ => {
