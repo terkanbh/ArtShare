@@ -1,5 +1,14 @@
 const baseUrl = 'http://localhost:5000/api/users';
 
+export const getUsers = async () => {
+  const res = await fetch(baseUrl, {
+    method: 'GET',
+    credentials: 'include'
+  });
+  if (res.ok) return await res.json();
+  throw new Error('Fetch users failed');
+};
+
 export const deleteUser = async (id) => {
   const res = await fetch(baseUrl + `/${id}`, {
     method: 'DELETE',

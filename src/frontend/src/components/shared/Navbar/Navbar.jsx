@@ -26,10 +26,14 @@ export default function Navbar() {
           {
             !auth
             ? <>
+              <Link to={'/search'} className='nav-link'> Search </Link>
               <Link to={'/login'} className='nav-link'> Login </Link>
               <Link to={'/register'} className='nav-link'> Sign up </Link>
             </>
             : <>
+              <Link to={`/search`} className={'nav-link ' + styles.linkIcon}>
+                <i className="bi bi-search"></i>
+              </Link>
               <Link to={`/users/${auth.id}`} className={'nav-link ' + styles.linkIcon}>
                 <i className="bi bi-person"></i>
               </Link>

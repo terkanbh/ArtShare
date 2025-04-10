@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router';
 import { PrivateRoute, ProtectedRoute, ProtectedArtworkSettings } from './routeGuards.jsx';
 import { AuthContextProvider } from './context/AuthContextProvider.jsx';
 import Home from './components/shared/Home/Home.jsx';
+import Search from './components/shared/Search/Search.jsx';
 import Layout from './components/shared/Layout.jsx';
 import UserLogin from './components/users/Login/Login.jsx';
 import UserRegister from './components/users/Register/Register.jsx';
@@ -22,6 +23,7 @@ function App() {
             
             {/* Public Routes */}
             <Route index element={<Home />} />
+            <Route path="search" element={<Search />} />
             <Route path="login" element={<ProtectedRoute element={<UserLogin />} />} />
             <Route path="register" element={<ProtectedRoute element={<UserRegister />} />} />
             

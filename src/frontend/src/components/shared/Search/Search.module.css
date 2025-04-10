@@ -1,0 +1,17 @@
+.inputWrapper {
+  display: flex;
+  gap: 7px;
+}
+
+.usersWrapper {
+  margin-top: 20px;
+}
+
+.rowWrapper {
+  cursor: pointer;
+}
+
+.image {
+  max-width: 40px;
+  border-radius: 20px;
+}
