@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useUser } from '../../../context/UserProvider.jsx';
-import { deleteUser } from '../../../services/usersService.js';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+import { useAuth } from '../../../hooks/useAuth.jsx';
+import { deleteUser } from '../../../services/usersService.js';
+
 export default function Delete({setErrorResponse}) {
-  const [user, setUser] = useUser();
+  const [auth, setAuth] = useAuth();
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
 
@@ -14,9 +15,9 @@ export default function Delete({setErrorResponse}) {
   const handleClose = () => setShow(false);
 
   const handleDelete = () => {
-    deleteUser(user.id)
+    deleteUser(auth.id)
       .then(() => {
-        setUser(null);
+        setAuth(null);
         navigate('/');
       })
       .catch(() => {

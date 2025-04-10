@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useAuth } from '../../../hooks/useAuth.jsx';
 import { deleteArtwork } from "../../../services/artworksService.js";
-import { useUser } from '../../../context/UserProvider.jsx';
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 export default function Delete({ artworkId, setErrorResponse }) {
-  const [user] = useUser();
+  const [auth] = useAuth();
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ export default function Delete({ artworkId, setErrorResponse }) {
 
   const handleDelete = () => {
     deleteArtwork(artworkId)
-      .then(() => navigate(`/users/${user.id}`))
+      .then(() => navigate(`/users/${auth.id}`))
       .catch(() => {
         setErrorResponse(true);
         setShow(false);

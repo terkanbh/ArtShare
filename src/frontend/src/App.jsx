@@ -1,43 +1,42 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { BrowserRouter, Routes, Route } from 'react-router';
-import { UserProvider } from './context/UserProvider.jsx';
 import { PrivateRoute, ProtectedRoute, ProtectedArtworkSettings } from './routeGuards.jsx';
-import Home from './components/Home/Home.jsx';
-import Layout from './components/Layout.jsx';
-import Login from './components/Login/Login.jsx';
-import Register from './components/Register/Register.jsx';
-import ArtworkDetails from './components/ArtworkDetails/ArtworkDetails.jsx';
-import Profile from './components/UserProfile/Profile.jsx';
-import UpdateUser from './components/Users/Update/Update.jsx';
-import CreateArtwork from './components/Artworks/Create/Create.jsx';
-import UpdateArtwork from './components/Artworks/Update/Update.jsx';
+import { AuthContextProvider } from './context/AuthContextProvider.jsx';
+import Home from './components/shared/Home/Home.jsx';
+import Layout from './components/shared/Layout.jsx';
+import UserLogin from './components/users/Login/Login.jsx';
+import UserRegister from './components/users/Register/Register.jsx';
+import UserDetails from './components/users/Details/Details.jsx';
+import UserUpdate from './components/users/Update/Update.jsx';
+import ArtworkDetails from './components/artworks/Details/Details.jsx';
+import ArtworkCreate from './components/Artworks/Create/Create.jsx';
+import ArtworkUpdate from './components/Artworks/Update/Update.jsx';
 
 function App() {
   return (
-    <UserProvider>
+    <AuthContextProvider>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
             
             {/* Public Routes */}
             <Route index element={<Home />} />
-            <Route path="login" element={<ProtectedRoute element={<Login />} />} />
-            <Route path="register" element={<ProtectedRoute element={<Register />} />} />
+            <Route path="login" element={<ProtectedRoute element={<UserLogin />} />} />
+            <Route path="register" element={<ProtectedRoute element={<UserRegister />} />} />
             
             {/* User Routes */}
-            <Route path="users/:id" element={<Profile />} />
-            <Route path="users/settings" element={<PrivateRoute element={<UpdateUser />} />} />
+            <Route path="users/:id" element={<UserDetails />} />
+            <Route path="users/settings" element={<PrivateRoute element={<UserUpdate />} />} />
             
             {/* Artwork Routes */}
-            <Route path="artworks/new" element={<PrivateRoute element={<CreateArtwork />} />} />
-            <Route path="artworks/settings/:id" element={<ProtectedArtworkSettings element={<UpdateArtwork />} />} />
+            <Route path="artworks/new" element={<PrivateRoute element={<ArtworkCreate />} />} />
+            <Route path="artworks/settings/:id" element={<ProtectedArtworkSettings element={<ArtworkUpdate />} />} />
             <Route path="artworks/:id" element={<ArtworkDetails />} />
-
             </Route>
           </Routes>
         </BrowserRouter>
-    </UserProvider>
+    </AuthContextProvider>
   );
 }
 

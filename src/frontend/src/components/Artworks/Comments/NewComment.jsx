@@ -1,13 +1,14 @@
 import { useState } from 'react';
+import { createComment } from '../../../services/commentsService.js';
+import { useArtworkDetails, useArtworkDetailsDispatch } from '../../../hooks/useArtworkDetails.jsx';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import styles from './NewComment.module.css';
-import { useArtwork, useArtworkDispatch } from '../../context/ArtworkContextProvider.jsx';
-import { createComment } from '../../services/commentsService.js';
 
 export default function NewComment() {
-  const artworkDetails = useArtwork();
-  const artworkDispatch = useArtworkDispatch();
+  const artworkDetails = useArtworkDetails();
+  const artworkDetailsDispatch = useArtworkDetailsDispatch();
+
   const [input, setInput] = useState('');
   const [isValid, setIsValid] = useState(true);
 
@@ -16,7 +17,7 @@ export default function NewComment() {
     if (!isValid) setIsValid(true);
   }
 
-  const postComment = () => {
+  const handleSubmit = () => {
     if (input.trim() === '') {
       setIsValid(false);
       return;
@@ -24,10 +25,10 @@ export default function NewComment() {
     
     createComment(artworkDetails.artwork.id, {text: input})
       .then(data => {
-        artworkDispatch({type: 'comment', comment: data});
+        artworkDetailsDispatch({type: 'comment', comment: data});
         setInput('');
       })
-      .catch(e => setInput(e));
+      .catch(e => setInput(e)); // TODO: add notifications
   }
 
   return (
@@ -36,7 +37,7 @@ export default function NewComment() {
         <Form.Control as="textarea" rows={2} isInvalid={!isValid} onChange={handleChange} value={input}/>
         <Form.Control.Feedback type="invalid"> Comment should not be empty </Form.Control.Feedback>
       </div>
-      <Button variant="primary" onClick={postComment}>
+      <Button variant="primary" onClick={handleSubmit}>
         <i className="bi bi-send-fill"></i>
       </Button>
     </div>

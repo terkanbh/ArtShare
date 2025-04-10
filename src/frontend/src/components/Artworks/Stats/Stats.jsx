@@ -1,19 +1,19 @@
 import { Link } from 'react-router';
-import { useUser } from '../../context/UserProvider.jsx';
-import { toggleLikeArtwork } from '../../services/artworksService.js';
-import { useArtwork, useArtworkDispatch } from '../../context/ArtworkContextProvider.jsx';
-import styles from './ArtworkStats.module.css';
+import { useAuth } from '../../../hooks/useAuth.jsx';
+import { useArtworkDetails, useArtworkDetailsDispatch } from '../../../hooks/useArtworkDetails.jsx';
+import { toggleLikeArtwork } from '../../../services/artworksService.js';
+import styles from './Stats.module.css';
 import Button from 'react-bootstrap/Button';
 
 export default function ArtworkStats() {
-  const [currentUser] = useUser();
-  const artworkDetails = useArtwork();
-  const artworkDispatch = useArtworkDispatch();
+  const [auth] = useAuth();
+  const artworkDetails = useArtworkDetails();
+  const artworkDetailsDispatch = useArtworkDetailsDispatch();
 
   const handleLike = () => {
     toggleLikeArtwork(artworkDetails.artwork.id)
       .then(data => {
-        artworkDispatch({
+        artworkDetailsDispatch({
           type: 'toggleLike',
           status: data.status,
           totalLikes: data.totalLikes
@@ -23,7 +23,7 @@ export default function ArtworkStats() {
 
   return (
       <div className={styles.stats}>
-        <Button variant="link" className={artworkDetails.likedByCurrentUser ? styles.liked : styles.notLiked} onClick={handleLike} disabled={currentUser === null} >
+        <Button variant="link" className={artworkDetails.likedByCurrentUser ? styles.liked : styles.notLiked} onClick={handleLike} disabled={!auth} >
           <i className={"bi bi-star-fill"}> </i>
           <span>  {artworkDetails.artwork.totalLikes} </span>
         </Button>
@@ -32,7 +32,7 @@ export default function ArtworkStats() {
           <span> {artworkDetails.artwork.totalComments} </span>
         </Button>
         {
-          currentUser && currentUser.id === artworkDetails.user.id &&
+          auth && auth.id === artworkDetails.user.id &&
           <Link to={`/artworks/settings/${artworkDetails.artwork.id}`} className={'nav-link ' + styles.linkIcon}>
             <i className="bi bi-gear-fill"></i>
           </Link>

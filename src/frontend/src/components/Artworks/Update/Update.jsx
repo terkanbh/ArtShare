@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { getArtwork, updateArtwork } from '../../../services/artworksService.js';
-import { validateImage, validateDescription } from '../../../validation/artworkValidator.js';
-import { uploadImage } from '../../../services/imagesService.js';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+
+import { getArtwork, updateArtwork } from '../../../services/artworksService.js';
+import { validateImage, validateDescription } from '../../../validation/artworkValidator.js';
+import { uploadImage } from '../../../services/imagesService.js';
 import Delete from '../Delete/Delete.jsx';
 
 export default function EditArtwork() {
@@ -63,9 +64,11 @@ export default function EditArtwork() {
       .then((res) => {
         if (formData.image) {
           uploadImage(res.artwork.id, formData.image)
-            .then(res => console.log(res))
+            .then(imageRes => console.log(imageRes))
             .catch(e => console.error(e))
-            .finally(() => navigate(`/artworks/${res.artwork.id}`));
+            .finally(_ => navigate(`/artworks/${res.artwork.id}`));
+        } else {
+          navigate(`/artworks/${res.artwork.id}`);
         }
       })
       .catch(() => setErrorResponse('Update artwork failed'));

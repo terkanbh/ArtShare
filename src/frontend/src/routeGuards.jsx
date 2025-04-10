@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useParams } from "react-router";
-import { useUser } from './context/UserProvider.jsx';
+
+import { useAuth } from './hooks/useAuth.jsx';
 import { checkOwnership } from './services/artworksService.js';
 
 export function ProtectedRoute({ element }) {
-  const [user] = useUser();
-  return user ? <Navigate to="/" replace /> : element;
+  const [auth] = useAuth();
+  return auth ? <Navigate to="/" replace /> : element;
 }
 
 export function PrivateRoute({ element }) {
-  const [user] = useUser();
-  return !user ? <Navigate to="/" replace /> : element;
+  const [auth] = useAuth();
+  return !auth ? <Navigate to="/" replace /> : element;
 }
 
 export function ProtectedArtworkSettings({ element }) {

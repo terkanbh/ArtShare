@@ -1,15 +1,25 @@
-import { useArtwork } from '../../context/ArtworkContextProvider.jsx';
-import { useUser } from '../../context/UserProvider.jsx';
+import { useAuth } from '../../../hooks/useAuth.jsx';
+import { useArtworkDetails } from '../../../hooks/useArtworkDetails.jsx';
 import styles from './Comments.module.css';
-import Comment from './Comment.jsx';
 import NewComment from './NewComment.jsx';
+import PostHeader from '../../shared/PostHeader/PostHeader.jsx';
 
-export default function ArtworkComments() {
-  const currentUser = useUser()[0];
-  const artworkDetails = useArtwork();
+function Comment({user, text, createdAt}) {
+  return (<>
+    <PostHeader user={user} createdAt={createdAt} />
+    <div> { text } </div>
+    <hr />
+  </>);
+}
+
+export default function Comments() {
+  const auth = useAuth()[0];
+  const artworkDetails = useArtworkDetails();
+
   const artworkUser = artworkDetails.user;
   const artworkDescription = artworkDetails.artwork.description;
   const artworkDate = artworkDetails.artwork.createdAt;
+
   const commentsMap = artworkDetails.comments.map(c =>
     <Comment key={c.id} user={c.user} text={c.text} createdAt={c.createdAt} />);
 
@@ -24,7 +34,7 @@ export default function ArtworkComments() {
       </div>
 
       {/* New comment */}
-      { currentUser && <NewComment /> }
+      { auth && <NewComment /> }
     </>
   );
 }

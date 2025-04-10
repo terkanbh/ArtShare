@@ -3,11 +3,12 @@ import { useParams } from 'react-router';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+
+import { getUserWithArtworks } from '../../../services/usersService.js';
 import ProfileHeader from './ProfileHeader.jsx';
 import ProfileArtworks from './ProfileArtworks.jsx';
-import { getUserWithArtworks } from '../../services/usersService.js';
 
-export default function Profile() {
+export default function Details() {
   const { id } = useParams();
   const [ userWithArtworks, setUserWithArtworks ] = useState(null)
 

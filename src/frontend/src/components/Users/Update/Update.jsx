@@ -1,25 +1,26 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { validateName, validateEmail } from '../../../validation/userValidator.js';
-import { useUser } from '../../../context/UserProvider.jsx';
-import { updateUser } from '../../../services/usersService.js';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+
+import { useAuth } from '../../../hooks/useAuth.jsx';
+import { updateUser } from '../../../services/usersService.js';
+import { validateName, validateEmail } from '../../../validation/userValidator.js';
 import Delete from '../Delete/Delete.jsx';
 
-export default function Edit() {
-  const [user, setUser] = useUser();
+export default function Update() {
+  const [auth, setAuth] = useAuth();
   const [errorResponse, setErrorResponse] = useState(false);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
+    firstName: auth.firstName,
+    lastName: auth.lastName,
+    email: auth.email,
   });
 
   const [formValidity, setFormValidity] = useState({
@@ -48,9 +49,9 @@ export default function Edit() {
 
     if (!isFormValid) return;
 
-    updateUser(user.id, formData)
+    updateUser(auth.id, formData)
       .then(user => {
-        setUser(user);
+        setAuth(user);
         navigate(`/users/${user.id}`);
       })
       .catch(() => setErrorResponse(true));

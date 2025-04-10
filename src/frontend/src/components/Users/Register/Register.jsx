@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { validateName, validateEmail, validatePassword } from '../../validation/userValidator.js'
-import { register } from '../../services/authService.js';
 import { useNavigate } from 'react-router';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
@@ -8,6 +6,9 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+
+import { register } from '../../../services/authService.js';
+import { validateName, validateEmail, validatePassword } from '../../../validation/userValidator.js'
 
 export default function Register() {
   const [errorResponse, setErrorResponse] = useState(false);

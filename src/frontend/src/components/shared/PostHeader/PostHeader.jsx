@@ -12,7 +12,6 @@ function formatDate(dateString) {
 }
 
 export default function PostHeader({user, createdAt}) {
-
   return (
     <div className={styles.postHeader}>
       <Link to={`/users/${user.id}`} className={styles.postLink}>

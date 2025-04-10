@@ -1,8 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { validateEmail, validatePassword } from '../../validation/userValidator.js'
-import { login } from '../../services/authService.js';
-import { useUser } from '../../context/UserProvider.jsx';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
@@ -10,9 +7,13 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import { useAuth } from '../../../hooks/useAuth.jsx';
+import { login } from '../../../services/authService.js';
+import { validateEmail, validatePassword } from '../../../validation/userValidator.js'
+
 export default function Login() {
   const [errorResponse, setErrorResponse] = useState(false);
-  const [, setUser] = useUser();
+  const [, setAuth] = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -25,7 +26,6 @@ export default function Login() {
     email: true,
     password: true,
   });
-
 
   const handleChange = (field) => (e) => {
     const value = field === 'rememberMe' ? e.target.checked : e.target.value;
@@ -52,7 +52,7 @@ export default function Login() {
 
     login(formData)
       .then((res) => {
-        setUser(res);
+        setAuth(res);
         navigate('/');
       })
       .catch(() => setErrorResponse(true));
