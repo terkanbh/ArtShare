@@ -14,3 +14,20 @@
   font-weight: 200;
   margin-left: 5px;
 }
+
+.headerAndStatsWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.headerWrapper {
+  flex-grow: 1;
+}
+
+.statsWrapper {
+  flex-shrink: 1;
+  display: flex;
+  gap: 10px;
+  color: #6c757d;
+  opacity: 0.65;
+}

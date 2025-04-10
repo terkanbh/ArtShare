@@ -5,7 +5,7 @@ import { toggleLikeArtwork } from '../../../services/artworksService.js';
 import styles from './Stats.module.css';
 import Button from 'react-bootstrap/Button';
 
-export default function ArtworkStats() {
+export default function Stats() {
   const [auth] = useAuth();
   const artworkDetails = useArtworkDetails();
   const artworkDetailsDispatch = useArtworkDetailsDispatch();

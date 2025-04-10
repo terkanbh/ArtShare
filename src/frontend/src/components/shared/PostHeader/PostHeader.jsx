@@ -20,7 +20,7 @@ export default function PostHeader({user, createdAt}) {
           alt="Avatar"
           className="rounded-circle img-fluid"
           width="40" height="40" />
-        <span className={styles.userName}><strong> {user.email} </strong></span>
+        <span className={styles.userName}><strong> {user.firstName} </strong></span>
       </Link>
       <span className={"text-muted " + styles.posted}> {formatDate(createdAt)} </span>
     </div>

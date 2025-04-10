@@ -1,4 +1,14 @@
-.cardWrapper {
-    display: flex;
-    justify-content: center;
+.selectedSort {
+  font-weight: bold;
+}
+
+.sortWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sortLink {
+  text-decoration: none;
+  color: black;
 }
