@@ -1,0 +1,11 @@
+.imageContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  object-fit: contain;
+}
+
+.img {
+  max-width: 100%;
+}

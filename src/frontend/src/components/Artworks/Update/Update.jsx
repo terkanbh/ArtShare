@@ -9,11 +9,13 @@ import { validateImage, validateDescription } from '../../../validation/artworkV
 import { uploadImage } from '../../../services/imagesService.js';
 import Delete from '../Delete/Delete.jsx';
 import Container from '../../shared/Container.jsx';
+import ImageViewer from '../../shared/ImageViewer/ImageViewer.jsx';
 
 export default function EditArtwork() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [errorResponse, setErrorResponse] = useState(false);
+  const [imageUrl, setImageUrl] = useState('http://localhost:5000/images/artworks/default.webp');
 
   const [formData, setFormData] = useState({
     image: null,
@@ -27,10 +29,12 @@ export default function EditArtwork() {
 
   useEffect(() => {
     getArtwork(id)
-      .then(artworkDetails => setFormData({
-        ...formData,
-        description: artworkDetails.artwork.description
-      }))
+      .then(artworkDetails => {
+        setFormData({
+          ...formData,
+          description: artworkDetails.artwork.description });
+        setImageUrl(artworkDetails.artwork.imageUrl);
+      })
       .catch(() => setErrorResponse('Failed to load artwork'));
   }, [id]);
 
@@ -73,8 +77,10 @@ export default function EditArtwork() {
   };
 
   return (
+
     <Container md={8} lg={6}>
           <h1>Edit Artwork</h1>
+          <ImageViewer imageUrl={imageUrl} />
           <Form onSubmit={handleSubmit}>
 
             {/* Image Upload */}

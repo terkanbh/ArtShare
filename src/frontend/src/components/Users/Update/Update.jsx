@@ -9,6 +9,7 @@ import { updateUser } from '../../../services/usersService.js';
 import { validateName, validateEmail } from '../../../validation/userValidator.js';
 import Delete from '../Delete/Delete.jsx';
 import Container from '../../shared/Container.jsx';
+import ImageViewer from '../../shared/ImageViewer/ImageViewer.jsx';
 
 export default function Update() {
   const [auth, setAuth] = useAuth();
@@ -58,6 +59,7 @@ export default function Update() {
   return (
     <Container md={8} lg={6}>
       <h1>Update Profile</h1>
+      <ImageViewer imageUrl={auth.imageUrl} />
       <Form onSubmit={handleSubmit}>
 
         {/* First Name */}

@@ -5,6 +5,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 
 import Container from '../../shared/Container.jsx';
+import ImageViewer from '../../shared/ImageViewer/ImageViewer.jsx';
 import { createArtwork } from '../../../services/artworksService.js';
 import { uploadImage } from '../../../services/imagesService.js';
 import { validateImage, validateDescription } from '../../../validation/artworkValidator.js';
@@ -12,6 +13,7 @@ import { validateImage, validateDescription } from '../../../validation/artworkV
 export default function Create() {
   const [errorResponse, setErrorResponse] = useState(false);
   const navigate = useNavigate();
+  const imageUrl = 'http://localhost:5000/images/artworks/default.webp';
 
   const [formData, setFormData] = useState({
     image: null,
@@ -62,6 +64,7 @@ export default function Create() {
   return (
     <Container md={8} lg={6}>
       <h1>Upload Artwork</h1>
+      <ImageViewer imageUrl={imageUrl} showFile={true} file={formData.image}/>
       <Form onSubmit={handleSubmit}>
 
         {/* Image Upload */}
