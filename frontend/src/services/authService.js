@@ -26,8 +26,15 @@ export const register = async (form) => {
     body: JSON.stringify(form),
     credentials: 'include'
   });
-  if (res.ok) return await res.json();
-  throw new Error("Register failed");
+
+  const data = await res.json();
+
+  if (res.ok) return data;
+
+  throw {
+    status: res.status,
+    errors: data.errors || ['Registration failed. Please try again later.']
+  };
 };
 
 export const logout = async () => {

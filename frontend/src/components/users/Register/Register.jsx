@@ -9,8 +9,9 @@ import { validateName, validateEmail, validatePassword } from '../../../validati
 import Container from '../../shared/Container.jsx';
 
 export default function Register() {
-  const [errorResponse, setErrorResponse] = useState(false);
   const navigate = useNavigate();
+  const [internalServerError, setInternalServerError] = useState(false);
+  const [badRequest, setBadRequest] = useState(null);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -28,13 +29,14 @@ export default function Register() {
     rePassword: true,
   });
 
-  const handleChange = (field) => (e) => {
+  const handleChange = field => e => {
     setFormData({ ...formData, [field]: e.target.value });
+
     if (!formValidity[field])
       setFormValidity({ ...formValidity, [field]: true });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newValidity = {
@@ -42,9 +44,8 @@ export default function Register() {
       lastName: validateName(formData.lastName),
       email: validateEmail(formData.email),
       password: validatePassword(formData.password),
+      rePassword: formData.password === formData.rePassword
     };
-
-    newValidity.rePassword = formData.password === formData.rePassword && newValidity.password;
 
     setFormValidity(newValidity);
 
@@ -52,9 +53,14 @@ export default function Register() {
 
     if (!isFormValid) return;
 
-    register(formData)
-      .then(_ => navigate('/login'))
-      .catch(_ => setErrorResponse(true));
+    try {
+      const { image, ...registerForm } = formData;
+      await register(registerForm);
+      navigate('/login');
+    } catch (res) {
+      if (res.status === 400) setBadRequest(res.errors.join('\n', res.errors));
+      else setInternalServerError(true);
+    }
   };
 
   return (
@@ -92,13 +98,17 @@ export default function Register() {
           <Form.Control.Feedback type="invalid"> Passwords don't match </Form.Control.Feedback>
         </FloatingLabel>
 
-        {/* Register fail */}
-        {
-          errorResponse &&
-          <span className="invalid-feedback mb-3" style={{ display: 'block' }}>
-            Register failed. Please try again later.
-          </span>
-        }
+        {/* Internal server error */}
+        {internalServerError &&
+        <span className="invalid-feedback mb-3" style={{ display: 'block' }}>
+          Register failed. Please try again later.
+        </span>}
+
+        {/* Validation error */}
+        {badRequest &&
+        <span className="invalid-feedback mb-3" style={{ display: 'block' }}>
+          {badRequest}
+        </span>}
 
         {/* Submit */}
         <Button variant="primary" type="submit"> Submit </Button>
