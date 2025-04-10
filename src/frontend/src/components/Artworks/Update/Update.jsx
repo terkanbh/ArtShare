@@ -3,14 +3,12 @@ import { useNavigate, useParams } from 'react-router';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 import { getArtwork, updateArtwork } from '../../../services/artworksService.js';
 import { validateImage, validateDescription } from '../../../validation/artworkValidator.js';
 import { uploadImage } from '../../../services/imagesService.js';
 import Delete from '../Delete/Delete.jsx';
+import Container from '../../shared/Container.jsx';
 
 export default function EditArtwork() {
   const { id } = useParams();
@@ -75,9 +73,7 @@ export default function EditArtwork() {
   };
 
   return (
-    <Container>
-      <Row className="justify-content-center">
-        <Col md={6}>
+    <Container md={8} lg={6}>
           <h1>Edit Artwork</h1>
           <Form onSubmit={handleSubmit}>
 
@@ -107,8 +103,6 @@ export default function EditArtwork() {
             <Delete artworkId={id} setErrorResponse={setErrorResponse} />
 
           </Form>
-        </Col>
-      </Row>
     </Container>
   );
 }
