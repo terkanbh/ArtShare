@@ -24,7 +24,7 @@ public class ArtworksController(
 
         var artwork = context.Artworks.Find(id);
         if (artwork is null) return NotFound();
-        if (artwork.UserId != userId) return Unauthorized();
+        if (artwork.UserId != userId) return Forbid();
 
         return Ok();
     }
@@ -38,7 +38,8 @@ public class ArtworksController(
         if (userId is null) return Unauthorized();
 
         var validationResult = validator.Validate(req);
-        if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
+        if (!validationResult.IsValid)
+            return BadRequest(new {Errors = new[] {validationResult.Errors}});
 
         var newArtworkId = Guid.NewGuid().ToString();
         context.Artworks.Add(new Artwork
@@ -50,16 +51,11 @@ public class ArtworksController(
             CreatedAt = DateTime.Now
         });
 
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch
-        {
-            return StatusCode(500);
-        }
+        try { await context.SaveChangesAsync(); }
+        catch { return StatusCode(500); }
 
         var createdArtwork = GetArtworkWithUserAndCommentsResponse(newArtworkId, userId);
+
         return Ok(createdArtwork);
     }
 
@@ -73,21 +69,15 @@ public class ArtworksController(
 
         var artwork = await context.Artworks.FindAsync(artworkId);
         if (artwork is null) return NotFound();
-        if (artwork.UserId != userId) return Unauthorized();
+        if (artwork.UserId != userId) return Forbid();
 
         var filePath = Path.Combine("wwwroot/images/artworks", $"{artworkId}.webp");
         if (System.IO.File.Exists(filePath)) System.IO.File.Delete(filePath);
 
         context.Artworks.Remove(artwork);
 
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch
-        {
-            return StatusCode(500, ResponseMapper.MapError("An error occurred while deleting the artwork.", []));
-        }
+        try { await context.SaveChangesAsync(); }
+        catch { return StatusCode(500); }
 
         return Ok(new { Message = "Artwork deleted successfully" });
     }
@@ -156,14 +146,8 @@ public class ArtworksController(
             actionTaken = "liked";
         }
 
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch (Exception)
-        {
-            return StatusCode(500, ResponseMapper.MapError("An error occurred while toggling the like.", []));
-        }
+        try { await context.SaveChangesAsync(); }
+        catch (Exception) { return StatusCode(500); }
 
         return Ok(new
         {
@@ -190,14 +174,8 @@ public class ArtworksController(
 
         artwork.Description = req.Description;
 
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch
-        {
-            return StatusCode(500);
-        }
+        try { await context.SaveChangesAsync(); }
+        catch { return StatusCode(500); }
 
         var updatedArtwork = GetArtworkWithUserAndCommentsResponse(artworkId, userId);
         return Ok(updatedArtwork);

@@ -2,6 +2,6 @@
 **/obj
 **/node_modules
 **/.vscode
-# **/database
-# **/wwwroot
+**/database
+**/wwwroot
 **/.DS_Store

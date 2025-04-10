@@ -36,33 +36,25 @@ public class CommentsController(
             .Include(c => c.Artwork)
             .FirstOrDefaultAsync(c => c.Id == id);
 
-        if (comment is null)
-        {
-            return NotFound();
-        }
+        if (comment is null) return NotFound();
 
         return Ok(ResponseMapper.Map(comment));
     }
 
     [HttpPost]
-    [Authorize]
     [Route("/api/comments/{artworkId}")]
     public async Task<IActionResult> Create(string artworkId, CommentSaveRequest req)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (userId is null)
-        {
-            return Unauthorized();
-        }
+        if (userId is null) return Unauthorized();
 
         if (!await context.Artworks.AnyAsync(a => a.Id == artworkId))
-        {
-            return BadRequest("Artwork not found");
-        }
+            return NotFound();
 
         var validationResult = validator.Validate(req);
-        if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
+        if (!validationResult.IsValid)
+            return BadRequest(new {Errors = new[] {validationResult.Errors}});
 
         var newComment = new Comment
         {
@@ -75,14 +67,8 @@ public class CommentsController(
 
         context.Add(newComment);
 
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch
-        {
-            return StatusCode(500);
-        }
+        try { await context.SaveChangesAsync(); }
+        catch { return StatusCode(500); }
 
         var created = context.Comments
             .Include(c => c.User)
@@ -97,32 +83,25 @@ public class CommentsController(
     public async Task<IActionResult> Update(string id, CommentSaveRequest req)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var validationResult = validator.Validate(req);
+        if (userId is null) return Unauthorized();
 
         var comment = await context.Comments.FirstOrDefaultAsync(c => c.Id == id);
-
         if (comment is null) return NotFound();
         if (comment.UserId != userId) return Forbid();
 
-        if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
-        if (userId is null) return Unauthorized();
+        var validationResult = validator.Validate(req);
+        if (!validationResult.IsValid)
+            return BadRequest(new {Errors = new[] {validationResult.Errors}});
 
         comment.Text = req.Text;
         
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch
-        {
-            return StatusCode(500);
-        }
+        try { await context.SaveChangesAsync(); }
+        catch { return StatusCode(500); }
 
         return Ok(ResponseMapper.Map(comment));
     }
 
     [HttpDelete]
-    [Authorize]
     [Route("/api/comments/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
@@ -130,20 +109,13 @@ public class CommentsController(
         if (userId is null) return Unauthorized();
 
         var comment = await context.Comments.FirstOrDefaultAsync(c => c.Id == id);
-
         if (comment is null) return NotFound();
         if (comment.UserId != userId) return Forbid();
 
         context.Comments.Remove(comment);
 
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch
-        {
-            return StatusCode(500);
-        }
+        try { await context.SaveChangesAsync(); }
+        catch { return StatusCode(500); }
 
         return NoContent();
     }
